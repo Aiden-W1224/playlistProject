@@ -5,7 +5,7 @@ export async function authorize() {
         return values.reduce((acc, x) => acc + possible[x % possible.length], "");
     }
       
-    const codeVerifier  = generateRandomString(64);
+    const codeVerifier = generateRandomString(64);
 
     const sha256 = async (plain : string) => {
         const encoder = new TextEncoder()
@@ -44,34 +44,41 @@ export async function authorize() {
 
     authUrl.search = new URLSearchParams(params).toString();
     window.location.href = authUrl.toString();
-
+    
 }
 
-async function getToken() {
-    const getToken = async (code : any) => {
+export const getToken = async () => {
 
-        // stored in the previous step
-        let codeVerifier = localStorage.getItem('code_verifier');
-      
-        const payload = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            client_id: clientId,
-            grant_type: 'authorization_code',
-            code,
-            redirect_uri: redirectUri,
-            code_verifier: codeVerifier,
-          }),
-        }
-      
-        const body = await fetch(url, payload);
-        const response =await body.json();
-      
-        localStorage.setItem('access_token', response.access_token);
-      }
-      
-      
+  const urlParams = new URLSearchParams(window.location.search);
+  let code = urlParams.get('code')!;
+  // stored in the previous step
+  let codeVerifier = localStorage.getItem('code_verifier')!;
+
+  console.log(code);
+  console.log(codeVerifier);
+
+  const payload = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: 'adc0687f2da046c0851e603068f1ab12',
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: 'http://localhost:3000/',
+      code_verifier: codeVerifier,
+    }),
+  }
+
+  const body = await fetch('https://accounts.spotify.com/api/token', payload);
+  const response =await body.json();
+
+  localStorage.setItem('access_token', response.access_token);
+  
 }
+
+
+
+
+
