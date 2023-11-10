@@ -24,7 +24,8 @@ export async function authorize() {
 
     const codeChallenge = base64encode(hashed);
 
-    const clientId = 'adc0687f2da046c0851e603068f1ab12';
+    const clientId = process.env.NEXT_PUBLIC_CLIENT_ID!;
+    console.log(clientId)
     const redirectUri = 'http://localhost:3000/';
 
     const scope = 'playlist-read-private';
@@ -63,7 +64,7 @@ export const getToken = async () => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      client_id: 'adc0687f2da046c0851e603068f1ab12',
+      client_id: process.env.NEXT_PUBLIC_CLIENT_ID!,
       grant_type: 'authorization_code',
       code,
       redirect_uri: 'http://localhost:3000/',
