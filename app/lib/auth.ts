@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+
 export async function authorize() {
     const generateRandomString = (length : number) => {
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -76,6 +78,9 @@ export const getToken = async () => {
   const response =await body.json();
 
   localStorage.setItem('access_token', response.access_token);
+
+  window.location.href = 'http://localhost:3000/dashboard'
+
   
 }
 
