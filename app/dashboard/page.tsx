@@ -2,10 +2,13 @@
 
 import Playlists from "../ui/playlists";
 
+import React, { useEffect } from 'react';
+
 export default function Page() {
-    const accessToken = localStorage.getItem('access_token')!;
-    console.log(accessToken)
-    return(
-        <Playlists accessToken={accessToken} />
-    )
+    
+  const accessToken = localStorage.getItem('access_token')!;
+
+  return (
+    <Playlists accessToken={accessToken} />
+  );
 }
