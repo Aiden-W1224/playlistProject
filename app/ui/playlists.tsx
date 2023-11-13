@@ -22,11 +22,13 @@ export default function Playlists(props: { accessToken: string }) {
     return <p>Loading...</p>; // or handle the loading state in a different way
   }
 
+  console.log(result)
+
   // Render the items
   return (
     <div className="flex flex-col space-y-4">
       {result.items.map((item: any) => (
-        <li key={item.id}><StylePlaylist item = {item}/></li>
+        <li className='list-none' key={item.id}><StylePlaylist item = {item}/></li>
       ))}
     </div>
   );
@@ -38,12 +40,7 @@ export function StylePlaylist(props: {item: any}) {
       <div className="flex flex-col p-8 bg-white shadow-md hover:shadow-lg rounded-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg"
-              className="w-16 h-16 rounded-2xl p-3 border border-blue-100 text-blue-400 bg-blue-50" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <img src={props.item.images[0].url} width='64px' height='64px'/>
             <div className="flex flex-col ml-3">
               <p className="text-sm text-gray-600 leading-none mt-1">{props.item.name}</p>
             </div>
