@@ -51,27 +51,27 @@ export function StylePlaylist(props: {item: any}) {
     );
 }
 
-export function Songs(endpoint: string, accessToken: string) {
-  const [result, setResult] = useState<any>(null);
-  //const [select, setSelect] = useState<string>("");
+// export function Songs(endpoint: string, accessToken: string) {
+//   const [result, setResult] = useState<any>(null);
+//   //const [select, setSelect] = useState<string>("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tracksResult = await fetchTracks(endpoint, accessToken);
-        setResult(tracksResult);
-      } catch (error) {
-        console.error('Error fetching tracks:', error);
-      }
-    };
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const tracksResult = await fetchTracks(endpoint, accessToken);
+//         setResult(tracksResult);
+//       } catch (error) {
+//         console.error('Error fetching tracks:', error);
+//       }
+//     };
 
-    fetchData();
-  }, [accessToken]);
+//     fetchData();
+//   }, [accessToken]);
 
-  // Check if result is truthy and has items property
-  if (!result || !result.items) {
-    return <p>Loading...</p>; // or handle the loading state in a different way
-  }
-}
+//   // Check if result is truthy and has items property
+//   if (!result || !result.items) {
+//     return <p>Loading...</p>; // or handle the loading state in a different way
+//   }
+// }
 
 
