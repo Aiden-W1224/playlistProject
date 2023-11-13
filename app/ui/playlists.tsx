@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPlaylists } from '../lib/fetchPlaylists';
+import { fetchPlaylists, fetchTracks } from '../lib/fetchPlaylists';
 
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
@@ -49,6 +49,29 @@ export function StylePlaylist(props: {item: any}) {
       </div>
     </div>
     );
+}
+
+export function Songs(endpoint: string, accessToken: string) {
+  const [result, setResult] = useState<any>(null);
+  //const [select, setSelect] = useState<string>("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tracksResult = await fetchTracks(endpoint, accessToken);
+        setResult(tracksResult);
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+      }
+    };
+
+    fetchData();
+  }, [accessToken]);
+
+  // Check if result is truthy and has items property
+  if (!result || !result.items) {
+    return <p>Loading...</p>; // or handle the loading state in a different way
+  }
 }
 
 

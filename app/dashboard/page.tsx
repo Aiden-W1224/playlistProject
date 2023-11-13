@@ -11,6 +11,11 @@ export default function Page() {
             <div className="grid h-screen-15 flex-grow card bg-base-300 rounded place-items-center border-solid border-2 overflow-auto">
                 <Playlists accessToken={accessToken}/>
             </div>
+            <div className="divider lg: divider-neutral-horizontal">
+                
+            </div>
+            <div className="grid flex-grow card bg-base-300 rounded border-solid border-2 place-items-center overflow-auto">
+            </div>
         </div>
     )
 }
