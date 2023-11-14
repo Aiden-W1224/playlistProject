@@ -35,14 +35,18 @@ export default function Playlists(props: { accessToken: string }) {
 }
 
 export function StylePlaylist(props: {item: any}) {
+    let imageUrl = '/defaultPlaylistImage.png';
+    if (props.item.images.length > 0) {
+      imageUrl = props.item.images[0].url;
+    }
     return(
     <div className="flex flex-col max-w-full">
       <div className="flex flex-col p-8 bg-white shadow-md hover:shadow-lg rounded-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <img src={props.item.images[0].url} width='64px' height='64px'/>
+            <img src={imageUrl} width='64px' height='64px'/>
             <div className="flex flex-col ml-3">
-              <p className="text-sm text-gray-600 leading-none mt-1">{props.item.name}</p>
+              <p className="text-sm text-gray-600 leading-none mt-1">{props.item.name}</p>  
             </div>
           </div>
         </div>
