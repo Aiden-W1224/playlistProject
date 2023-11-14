@@ -78,6 +78,7 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setResult(null);
         const tracksResult = await fetchTracks(props.endpoint, props.accessToken);
         setResult(tracksResult);
       } catch (error) {
@@ -94,6 +95,13 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   if (!result || !result.items) {
     return <p>Loading...</p>; // or handle the loading state in a different way
   }
+  return(
+    <div className="flex flex-col space-y-4">
+      {result.items.map((item: any) => (
+        <li className='list-none'key={item.track.id}>{item.track.name}</li>
+      ))}
+    </div>    
+  );
 }
 
 
