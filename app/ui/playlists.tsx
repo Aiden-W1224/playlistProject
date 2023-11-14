@@ -86,9 +86,9 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
     };
 
     fetchData();
-  }, [props.accessToken]);
+  }, [props.endpoint]);
 
-  console.log(props.endpoint);
+  console.log(result);
 
   // Check if result is truthy and has items property
   if (!result || !result.items) {
