@@ -14,9 +14,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const backgroundImageStyle = {
+    backgroundImage: `url('/backgroundImage.png')`
+  };
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} leading-normal tracking-normal text-indigo-400 m-6 bg-cover bg-fixed`}>{children}</body>
     </html>
   )
 }
