@@ -27,8 +27,6 @@ export default function Playlists(props: { accessToken: string }) {
     setEndpoint(endpointHref);
   }
 
-  console.log(result)
-
   // Render the items
   return (
     <div className="flex max-h-screen w-full px-10 py-32">
@@ -43,8 +41,10 @@ export default function Playlists(props: { accessToken: string }) {
             
         </div>
         <div className="grid flex-grow card bg-base-300 rounded border-solid border-2 place-items-center overflow-auto">
-          <Songs endpoint={endpoint} accessToken={props.accessToken}/>
+          {endpoint !== "" ? <Songs endpoint={endpoint} accessToken={props.accessToken}/> : null}
+          {/* <Songs endpoint={endpoint} accessToken={props.accessToken}/> */}
         </div>
+        {endpoint !== "" ? <TransferButton endpoint={endpoint} accessToken={props.accessToken}/> : null}
     </div>
     
   );
@@ -89,8 +89,6 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
     fetchData();
   }, [props.endpoint]);
 
-  console.log(result);
-
   // Check if result is truthy and has items property
   if (!result || !result.items) {
     return <p>Loading...</p>; // or handle the loading state in a different way
@@ -102,6 +100,34 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
       ))}
     </div>    
   );
+}
+
+function TransferButton(props: {endpoint: string, accessToken: string}) {
+  const [result, setResult] = useState<any>(null);
+  const [trackArray, setTrackArray] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setResult(null);
+        const tracksResult = await fetchTracks(props.endpoint, props.accessToken);
+        setResult(tracksResult);
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+      }
+    };
+
+    fetchData();
+  }, [props.endpoint]);
+
+  useEffect(() => {
+    if (result && result.items) {
+      setTrackArray([...result.items])
+    }
+  }, [result])
+
+  return <button>Transfer</button>
+
 }
 
 
