@@ -54,7 +54,7 @@ export default function Home() {
         </div>
 
         <div className="w-full xl:w-3/5 p-12 overflow-hidden">
-          <img className="mx-auto w-full md:w-4/5 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6" src="dashboardPage.png" />
+          <img className=" rounded-md mx-auto w-full md:w-4/5 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6" src="dashboardPage.png" />
         </div>
   
         <div className="mx-auto flex flex-col items-center text-center pb-24 lg:pb-0 fade-in">
