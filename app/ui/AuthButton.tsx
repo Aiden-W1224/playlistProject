@@ -1,6 +1,6 @@
 'use client'
 import styles from './ColorBackground.module.css';
-import { authorize, getToken } from '../lib/auth';
+import { authorize, getToken } from '../lib/spotify/auth';
 
 export default function AuthButton() {
 	const urlParams = new URLSearchParams(window.location.search);
@@ -17,3 +17,4 @@ export default function AuthButton() {
 		 </button>
 	)
 }
+
