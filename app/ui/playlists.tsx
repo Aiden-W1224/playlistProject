@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPlaylists, fetchTracks } from '../lib/spotify/fetchPlaylists';
+import { sendTracks } from '../lib/ytmusic/sendTracks';
+import { send } from 'process';
 
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
@@ -122,11 +124,25 @@ function TransferButton(props: {endpoint: string, accessToken: string}) {
 
   useEffect(() => {
     if (result && result.items) {
-      setTrackArray([...result.items])
+      setTrackArray([...result.items])     
     }
   }, [result])
+  //console.log(trackArray)
 
-  return <button>Transfer</button>
+  if(trackArray.length > 0) {
+    //console.log(trackArray[0].track.name);
+    //console.log(trackArray[0].track.artist[0])
+  }
+  // let string = "";
+  const jsonString = JSON.stringify(trackArray);
+  console.log(jsonString);
+
+  
+  const handleClick = () => {
+    sendTracks(trackArray);
+  };
+
+  return <button onClick={handleClick}>Transfer</button>
 
 }
 

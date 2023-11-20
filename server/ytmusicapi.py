@@ -1,7 +1,15 @@
-from flask import Flask
+from flask import Flask, request 
+from flask_cors import CORS 
+
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route("/")
+@app.route("/search", methods=['POST'])
 def hello_world():
-    return "Hello World"
+    try:
+        json_data = request.get_json()
+        return json_data
+    except Exception as e:
+        # Handle exceptions if any
+        return 0
