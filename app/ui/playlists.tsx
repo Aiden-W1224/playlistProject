@@ -128,15 +128,14 @@ function TransferButton(props: {endpoint: string, accessToken: string}) {
       setTrackArray([...result.items])     
     }
   }, [result])
-  //console.log(trackArray)
+  console.log(trackArray)
 
   if(trackArray.length > 0) {
     //console.log(trackArray[0].track.name);
     //console.log(trackArray[0].track.artist[0])
   }
   // let string = "";
-  const jsonString = JSON.stringify(trackArray);
-  console.log(jsonString);
+ 
 
   
   const handleClick = () => {
