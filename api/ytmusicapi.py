@@ -9,8 +9,8 @@ CORS(app)
 def hello_world():
     try:
         json_data = request.get_json()
-        print("Received and processed data:", processed_data)
+        print(json_data)
         return jsonify({"status": "success", "message": "JSON processed successfully"})
     except Exception as e:
         # Handle exceptions if any
-        return jsonify({"status": "error", "message": "JSON is missing 'data' key"})
+        return jsonify({e})
