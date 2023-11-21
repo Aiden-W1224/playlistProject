@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchPlaylists, fetchTracks } from '../lib/spotify/fetchPlaylists';
 import { sendTracks } from '../lib/ytmusic/sendTracks';
 import { send } from 'process';
+import { getYouTubeToken } from '../lib/ytmusic/auth';
 
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
@@ -139,7 +140,13 @@ function TransferButton(props: {endpoint: string, accessToken: string}) {
 
   
   const handleClick = () => {
-    sendTracks(trackArray);
+    getYouTubeToken().then(
+      result => {
+        sendTracks(trackArray);
+      }).
+      catch(error => {
+        console.log(error);
+      });
   };
 
   return <button onClick={handleClick}>Transfer</button>
