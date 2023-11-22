@@ -13,12 +13,10 @@ CORS(app)
 def search_tracks():
     try:
         ytmusic = YTMusic('oauth.json')
-        playlistId = ytmusic.create_playlist("test", "test description")
         json_data = request.get_json()
-        print(playlistId)
-        for track in json_data:
+        playlistId = ytmusic.create_playlist(json_data[1], "")
+        for track in json_data[0]:
             track_name = track['track']['name']
-            print(track_name)
             artists = track['track']['artists']
             for artist in artists:
                 artist_name = artist['name']

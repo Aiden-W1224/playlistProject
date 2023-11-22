@@ -7,6 +7,7 @@ import { getYouTubeToken } from '../lib/ytmusic/auth';
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
   const [endpoint, setEndpoint] = useState<string>("");
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,8 +27,9 @@ export default function Playlists(props: { accessToken: string }) {
     return <p>Loading...</p>; // or handle the loading state in a different way
   }
 
-  const handleClick = (endpointHref: string) => {
-    setEndpoint(endpointHref);
+  const handleClick = (item: any) => {
+    setEndpoint(item.tracks.href);
+    setSelectedPlaylist(item);
   }
 
   // Render the items
@@ -36,7 +38,7 @@ export default function Playlists(props: { accessToken: string }) {
         <div className="grid h-screen-15 flex-grow card bg-base-300 rounded place-items-center border-solid border-2 overflow-auto">
           <div className="flex flex-col space-y-4">
             {result.items.map((item: any) => (
-              <li className='list-none' key={item.id} onClick={() => handleClick(item.tracks.href)}><StylePlaylist item = {item}/></li>
+              <li className='list-none' key={item.id} onClick={() => handleClick(item)}><StylePlaylist item = {item}/></li>
             ))}
           </div>
         </div>
@@ -47,7 +49,7 @@ export default function Playlists(props: { accessToken: string }) {
           {endpoint !== "" ? <Songs endpoint={endpoint} accessToken={props.accessToken}/> : null}
           {/* <Songs endpoint={endpoint} accessToken={props.accessToken}/> */}
         </div>
-        {endpoint !== "" ? <TransferButton endpoint={endpoint} accessToken={props.accessToken}/> : null}
+        {endpoint !== "" ? <TransferButton endpoint={endpoint} accessToken={props.accessToken} selectedPlaylist={selectedPlaylist}/> : null}
     </div>
     
   );
@@ -105,9 +107,11 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   );
 }
 
-function TransferButton(props: {endpoint: string, accessToken: string}) {
+function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any}) {
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
+
+  let playlistName: string = props.selectedPlaylist.name;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,6 +132,7 @@ function TransferButton(props: {endpoint: string, accessToken: string}) {
       setTrackArray([...result.items])     
     }
   }, [result])
+  console.log(result)
   console.log(trackArray)
 
   if(trackArray.length > 0) {
@@ -141,7 +146,7 @@ function TransferButton(props: {endpoint: string, accessToken: string}) {
   const handleClick = () => {
     getYouTubeToken().then(
       result => {
-        sendTracks(trackArray);
+        sendTracks(playlistName, trackArray);
       }).
       catch(error => {
         console.log(error);
