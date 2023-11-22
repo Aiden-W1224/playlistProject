@@ -4,37 +4,60 @@ import json
 import time
 import requests
 from ytmusicapi import YTMusic
+import time
 
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/search", methods=['POST'])
-def search_tracks():
+def receive_tracks():
     try:
         ytmusic = YTMusic('oauth.json')
         json_data = request.get_json()
         playlistId = ytmusic.create_playlist(json_data[1], "")
-        queryArray = []
-        for track in json_data[0]:
-            track_name = track['track']['name']
-            artists = track['track']['artists']
-            for artist in artists:
-                artist_name = artist['name']
-                track_name = track_name + " " + artist_name
-            queryArray.append(track_name)
+        queryArray = extractQuery(json_data) # returns an array of search string containing track name/artist
         print(queryArray)
+        searchedSongs = searchSongs(queryArray)
+        print(searchedSongs)
+        start = time.time()
+        ytmusic.add_playlist_items(playlistId, searchedSongs)
+        end = time.time()
+        print("Receive Tracks")
+        print(end-start)
+
         return jsonify({"status": "success", "message": "JSON processed successfully"})
     except Exception as e:
         # Handle exceptions if any
         return jsonify({e})
-    
+
+def extractQuery(json_data_input):
+    queryArray = []
+    start = time.time()
+    for track in json_data_input[0]:
+        track_name = track['track']['name']
+        artists = track['track']['artists']
+        for artist in artists:
+            artist_name = artist['name']
+            track_name = track_name + " " + artist_name
+        queryArray.append(track_name)
+    end = time.time()
+    print("Extract Query")
+    print(end-start)
+    return queryArray
+
 def searchSongs(queryArray):
+    ytmusic = YTMusic('oauth.json')
     videoId_array = []
+    start = time.time()
     for searchString in queryArray:
-        result = YTMusic.search(searchString,limit= 1, ignore_spelling=True)
-        video_id = [item['videoId'] for item in result if 'videoId' in item]
-        videoId_array.append(video_id)
+        result = ytmusic.search(query=searchString, filter='songs', ignore_spelling=True, limit=1)
+        print(result)
+        videoId_array.append(result[0]['videoId'])
+    end = time.time()
+    print("Search Songs")
+    print(end-start)
+    return videoId_array
 
 @app.route("/get-token", methods=['GET'])
 def send_token():
