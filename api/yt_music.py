@@ -15,12 +15,15 @@ def search_tracks():
         ytmusic = YTMusic('oauth.json')
         json_data = request.get_json()
         playlistId = ytmusic.create_playlist(json_data[1], "")
+        queryArray = []
         for track in json_data[0]:
             track_name = track['track']['name']
             artists = track['track']['artists']
             for artist in artists:
                 artist_name = artist['name']
-                print(artist_name)
+                track_name = track_name + " " + artist_name
+            queryArray.append(track_name)
+        print(queryArray)
         return jsonify({"status": "success", "message": "JSON processed successfully"})
     except Exception as e:
         # Handle exceptions if any
