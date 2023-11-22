@@ -28,6 +28,13 @@ def search_tracks():
     except Exception as e:
         # Handle exceptions if any
         return jsonify({e})
+    
+def searchSongs(queryArray):
+    videoId_array = []
+    for searchString in queryArray:
+        result = YTMusic.search(searchString,limit= 1, ignore_spelling=True)
+        video_id = [item['videoId'] for item in result if 'videoId' in item]
+        videoId_array.append(video_id)
 
 @app.route("/get-token", methods=['GET'])
 def send_token():
