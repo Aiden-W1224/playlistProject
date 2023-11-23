@@ -1,6 +1,6 @@
 'use client'
 import styles from './ColorBackground.module.css';
-import { authorize, getToken } from '../lib/spotify/auth';
+import { authorize, getToken, refreshAccessToken } from '../lib/spotify/auth';
 
 export default function AuthButton() {
 	const urlParams = new URLSearchParams(window.location.search);
@@ -8,7 +8,14 @@ export default function AuthButton() {
 	let onClickFunc = authorize;
 	let btnLabel = 'Login With Spotify';
 	if (code !== null) {
-		onClickFunc = getToken;
+		const refreshToken = localStorage.getItem('refresh_token');
+		console.log(refreshToken)
+		if (refreshToken === null || refreshToken === undefined || refreshToken === "undefined") {
+			onClickFunc = getToken;
+		}
+		else {
+			onClickFunc = refreshAccessToken;
+		}
 		btnLabel = 'Get Token';
 	}
 	return (

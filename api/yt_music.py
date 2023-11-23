@@ -49,14 +49,13 @@ def extractQuery(json_data_input):
 def searchSongs(queryArray):
     ytmusic = YTMusic('oauth.json')
     videoId_array = []
-    start = time.time()
     for searchString in queryArray:
+        start = time.time()
         result = ytmusic.search(query=searchString, filter='songs', ignore_spelling=True, limit=1)
-        print(result)
         videoId_array.append(result[0]['videoId'])
-    end = time.time()
-    print("Search Songs")
-    print(end-start)
+        end = time.time()
+        print("Search Songs")
+        print(end-start)
     return videoId_array
 
 @app.route("/get-token", methods=['GET'])

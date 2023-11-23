@@ -94,6 +94,8 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
     fetchData();
   }, [props.endpoint]);
 
+  console.log(result)
+
   // Check if result is truthy and has items property
   if (!result || !result.items) {
     return <p>Loading...</p>; // or handle the loading state in a different way
