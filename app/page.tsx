@@ -45,7 +45,7 @@ export default function Home() {
           </span>
         </h1>
         <p className="leading-normal text-base md:text-2xl mb-8 text-center md:text-left">
-          Transfer your playlists from Spotify to Apple Music with ease!
+          Transfer your playlists from Spotify to YouTube Music with ease!
         </p>
 
         <AuthButton/>
