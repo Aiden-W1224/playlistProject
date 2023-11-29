@@ -11,11 +11,15 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/search", methods=['POST'])
-def receive_tracks():
+def sync_playlist():
     try:
         ytmusic = YTMusic('oauth.json')
         json_data = request.get_json()
+        start1 = time.time()
         playlistId = ytmusic.create_playlist(json_data[1], "")
+        end1 = time.time()
+        print("Create playlist")
+        print(end1-start1)
         queryArray = extractQuery(json_data) # returns an array of search string containing track name/artist
         print(queryArray)
         searchedSongs = searchSongs(queryArray)
@@ -23,7 +27,7 @@ def receive_tracks():
         start = time.time()
         ytmusic.add_playlist_items(playlistId, searchedSongs)
         end = time.time()
-        print("Receive Tracks")
+        print("Add to playlist")
         print(end-start)
 
         return jsonify({"status": "success", "message": "JSON processed successfully"})

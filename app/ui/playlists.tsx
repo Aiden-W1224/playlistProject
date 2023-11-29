@@ -102,7 +102,7 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   return(
     <div className="flex flex-col space-y-4">
       {result.items.map((item: any) => (
-        <li className='list-none' key={item.track.id}>
+        <li className='list-none p-3' key={item.track.id}>
           <div className="flex flex-col max-w-full">
             <div className="flex flex-col p-8 bg-white shadow-md hover:bg-violet-400 transition ease-in rounded-2xl">
               <div className="flex items-center justify-between">
@@ -128,6 +128,7 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
 function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any}) {
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
+  const [progressPercent, setProgressPercent] = useState(0);
 
   let playlistName: string = props.selectedPlaylist.name;
 
@@ -151,17 +152,26 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
     }
   }, [result])
 
-  if(trackArray.length > 0) {
-    //console.log(trackArray[0].track.name);
-    //console.log(trackArray[0].track.artist[0])
+  const startProgress = () => {
+    const TIME_FOR_SEARCH : number = 0.6;
+    const TIME_FOR_CREATING_PLAYLIST = 0.6;
+    const TIME_FOR_ADDING_TO_PLAYLIST = 0.7;
+    let playlistLength : number = trackArray.length;
+    let estimateSyncTime : number = (playlistLength * TIME_FOR_SEARCH) + TIME_FOR_CREATING_PLAYLIST + TIME_FOR_ADDING_TO_PLAYLIST;
+    let progressIncrement : number = (estimateSyncTime/100);
+    let currentProgress : number = 0;
+    while (currentProgress < estimateSyncTime) {
+      currentProgress += progressIncrement;
+      console.log(currentProgress)
+      setProgressPercent((currentProgress/estimateSyncTime)*100)
+      console.log(progressPercent)
+    }
   }
-  // let string = "";
- 
-
   
   const handleClick = () => {
     getYouTubeToken().then(
       result => {
+        startProgress();
         sendTracks(playlistName, trackArray);
       }).
       catch(error => {
@@ -169,7 +179,16 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
       });
   };
 
-  return <button onClick={handleClick}>Transfer</button>
+  return (
+    <div className='flex w-full items-center'>
+      <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-4 rounded focus:ring transform transition duration-300 ease-in-out' onClick={handleClick}>Transfer</button>
+      <div className="flex-1 flex-col md:flex-row h-5 me-3 bg-gray-200 rounded-full dark:bg-gray-700">
+        <div className="bg-gradient-to-r from-purple-800 to-green-500 text-xs font-medium h-5 text-blue-100 text-center p-0.5 leading-none rounded-full" style={{width: `${progressPercent}%`}}>{progressPercent}%</div>
+      </div>
+    </div>
+    
+  )
+  
 
 }
 
