@@ -8,5 +8,5 @@ export const sendTracks = async (playlistName: string, trackArray: any) => {
       }
       const body = await fetch('http://127.0.0.1:5000/search', payload);
       const response =await body.json();
-      console.log(response)
+      return response;
 }

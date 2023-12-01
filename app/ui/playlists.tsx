@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPlaylists, fetchTracks } from '../lib/spotify/fetchPlaylists';
 import { sendTracks } from '../lib/ytmusic/sendTracks';
-import { send } from 'process';
 import { getYouTubeToken } from '../lib/ytmusic/auth';
+import { DashboardSkeleton, SongsSkeleton } from './skeletons';
 
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
@@ -24,7 +24,7 @@ export default function Playlists(props: { accessToken: string }) {
 
   // Check if result is truthy and has items property
   if (!result || !result.items) {
-    return <p>Loading...</p>; // or handle the loading state in a different way
+    return <DashboardSkeleton/>
   }
 
   const handleClick = (item: any) => {
@@ -79,7 +79,6 @@ export function StylePlaylist(props: {item: any}) {
 
 export function Songs(props: {endpoint: string, accessToken: string}) {
   const [result, setResult] = useState<any>(null);
-  //const [select, setSelect] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,7 +96,7 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
 
   // Check if result is truthy and has items property
   if (!result || !result.items) {
-    return <p>Loading...</p>; // or handle the loading state in a different way
+    return <SongsSkeleton/>
   }
   return(
     <div className="flex flex-col space-y-4">
@@ -121,14 +120,14 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
           </div>
         </li>
       ))}
-    </div>    
+    </div>   
   );
 }
 
 function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any}) {
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
-  const [progressPercent, setProgressPercent] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   let playlistName: string = props.selectedPlaylist.name;
 
@@ -152,44 +151,40 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
     }
   }, [result])
 
-  const startProgress = () => {
-    const TIME_FOR_SEARCH : number = 0.6;
-    const TIME_FOR_CREATING_PLAYLIST = 0.6;
-    const TIME_FOR_ADDING_TO_PLAYLIST = 0.7;
-    let playlistLength : number = trackArray.length;
-    let estimateSyncTime : number = (playlistLength * TIME_FOR_SEARCH) + TIME_FOR_CREATING_PLAYLIST + TIME_FOR_ADDING_TO_PLAYLIST;
-    let progressIncrement : number = (estimateSyncTime/100);
-    let currentProgress : number = 0;
-    while (currentProgress < estimateSyncTime) {
-      currentProgress += progressIncrement;
-      console.log(currentProgress)
-      setProgressPercent((currentProgress/estimateSyncTime)*100)
-      console.log(progressPercent)
-    }
+  const handleClick = async () => {
+    getYouTubeToken()
+      .then(result => {
+        setLoading(true)
+        return sendTracks(playlistName, trackArray)
+      })
+      .then(response => {
+        if ('status' in response) {
+          setLoading(false)
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
-  
-  const handleClick = () => {
-    getYouTubeToken().then(
-      result => {
-        startProgress();
-        sendTracks(playlistName, trackArray);
-      }).
-      catch(error => {
-        console.log(error);
-      });
-  };
 
   return (
     <div className='flex w-full items-center'>
       <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-4 rounded focus:ring transform transition duration-300 ease-in-out' onClick={handleClick}>Transfer</button>
-      <div className="flex-1 flex-col md:flex-row h-5 me-3 bg-gray-200 rounded-full dark:bg-gray-700">
-        <div className="bg-gradient-to-r from-purple-800 to-green-500 text-xs font-medium h-5 text-blue-100 text-center p-0.5 leading-none rounded-full" style={{width: `${progressPercent}%`}}>{progressPercent}%</div>
-      </div>
+      {loading ? <Spinner /> : null}
     </div>
     
   )
   
 
 }
+
+function Spinner() {
+  return (
+    <div className="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-green-600 rounded-full" role="status" aria-label="loading">
+      <span className="sr-only">Loading...</span>
+    </div>
+  )
+}
+
 
 
