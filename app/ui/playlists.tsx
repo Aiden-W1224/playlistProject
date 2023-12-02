@@ -27,7 +27,13 @@ export default function Playlists(props: { accessToken: string }) {
     return <DashboardSkeleton/>
   }
 
+  const refs = result.items.reduce((acc : any, value : any) => {
+    acc[value.id] = React.createRef();
+    return acc;
+  }, {});
+
   const handleClick = (item: any) => {
+    refs[item.id].current.scrollIntoView({behavior: 'smooth', block : 'start'});
     setEndpoint(item.tracks.href);
     setSelectedPlaylist(item);
   }
@@ -39,7 +45,7 @@ export default function Playlists(props: { accessToken: string }) {
         <div className="max-h-[80vh] overflow-y-scroll mt-4">
           <ul className="list-disc pl-4">
             {result.items.map((item: any) => (
-              <li className='list-none p-3' key={item.id} onClick={() => handleClick(item)}><StylePlaylist item = {item}/></li>
+              <li className='list-none p-3' key={item.id} ref={refs[item.id]} onClick={() => handleClick(item)}><StylePlaylist item = {item}/></li>
             ))}
           </ul>
         </div>
