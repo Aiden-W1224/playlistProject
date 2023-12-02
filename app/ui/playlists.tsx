@@ -45,7 +45,7 @@ export default function Playlists(props: { accessToken: string }) {
         <div className="max-h-[80vh] overflow-y-scroll mt-4">
           <ul className="list-disc pl-4">
             {result.items.map((item: any) => (
-              <li className='list-none p-3' key={item.id} ref={refs[item.id]} onClick={() => handleClick(item)}><StylePlaylist item = {item}/></li>
+              <li className='list-none p-3 active:border-red-600' key={item.id} ref={refs[item.id]} onClick={() => handleClick(item)}><StylePlaylist item = {item}/></li>
             ))}
           </ul>
         </div>
@@ -104,9 +104,11 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   if (!result || !result.items) {
     return <SongsSkeleton/>
   }
+
+  const filteredResult = result.items.filter((item : any) => item.track !== null);
   return(
     <div className="flex flex-col space-y-4">
-      {result.items.map((item: any) => (
+      {filteredResult.map((item: any) => (
         <li className='list-none p-3' key={item.track.id}>
           <div className="flex flex-col max-w-full">
             <div className="flex flex-col p-8 bg-white shadow-md hover:bg-violet-400 transition ease-in rounded-2xl">
