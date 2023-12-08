@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPlaylists, fetchTracks } from '../lib/spotify/fetchPlaylists';
-import { sendTracks } from '../lib/ytmusic/sendTracks';
-import { getYouTubeToken } from '../lib/ytmusic/auth';
 import { DashboardSkeleton, SongsSkeleton } from './skeletons';
+import Modal from './Modal';
 
 export default function Playlists(props: { accessToken: string }) {
   const [result, setResult] = useState<any>(null);
   const [endpoint, setEndpoint] = useState<string>("");
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [filterText, setFilterText] = useState('');
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +57,14 @@ export default function Playlists(props: { accessToken: string }) {
           {endpoint !== "" ? <Songs endpoint={endpoint} accessToken={props.accessToken}/> : null}
         </div>
       </div>
-      {endpoint !== "" ? <TransferButton endpoint={endpoint} accessToken={props.accessToken} selectedPlaylist={selectedPlaylist}/> : null}
+      {/* {endpoint !== "" ? <TransferButton endpoint={endpoint} accessToken={props.accessToken} selectedPlaylist={selectedPlaylist}/> : null} */}
+      {endpoint !== "" ?
+        <>
+          <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-2 rounded focus:ring transform transition duration-300 ease-in-out' onClick={() => setModal(true)}>Transfer</button>
+          <Modal openModal={modal} closeModal={() => setModal(false)} endpoint={endpoint} accessToken={props.accessToken} selectedPlaylist={selectedPlaylist}/>
+        </>
+        : null}
+      
     </div>
     
   );
@@ -134,58 +141,6 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
   );
 }
 
-function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any}) {
-  const [result, setResult] = useState<any>(null);
-  const [trackArray, setTrackArray] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  let playlistName: string = props.selectedPlaylist.name;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setResult(null);
-        const tracksResult = await fetchTracks(props.endpoint, props.accessToken);
-        setResult(tracksResult);
-      } catch (error) {
-        console.error('Error fetching tracks:', error);
-      }
-    };
-
-    fetchData();
-  }, [props.endpoint]);
-
-  useEffect(() => {
-    if (result && result.items) {
-      setTrackArray([...result.items])     
-    }
-  }, [result])
-
-  const handleClick = async () => {
-    getYouTubeToken()
-      .then(result => {
-        setLoading(true)
-        return sendTracks(playlistName, trackArray)
-      })
-      .then(response => {
-        if ('status' in response) {
-          setLoading(false)
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  return (
-    <div className='flex w-full items-center'>
-      <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-2 rounded focus:ring transform transition duration-300 ease-in-out' onClick={handleClick}>Transfer</button>
-      {loading ? <Spinner /> : null}
-    </div>
-    
-  )
-}
-
 function SearchBar(props : {filterText : string, onFilterChange : any}) {
   return (
     <div className="w-full flex justify-center pe-3 ps-7">
@@ -194,7 +149,7 @@ function SearchBar(props : {filterText : string, onFilterChange : any}) {
            value={props.filterText} placeholder="Search..." onChange={(e) => props.onFilterChange(e.target.value)}/>
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
           </svg>
         </div>
       </div>
@@ -202,13 +157,6 @@ function SearchBar(props : {filterText : string, onFilterChange : any}) {
   )
 }
 
-function Spinner() {
-  return (
-    <div className="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-green-600 rounded-full" role="status" aria-label="loading">
-      <span className="sr-only">Loading...</span>
-    </div>
-  )
-}
 
 
 
