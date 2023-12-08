@@ -4,10 +4,11 @@ import { getYouTubeToken } from "../lib/ytmusic/auth";
 import { sendTracks } from "../lib/ytmusic/sendTracks";
 import Spinner from "./Spinner";
 
-export default function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any, playlistName: string}) {
+export default function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any, playlistName: string, privacy: boolean}) {
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [privacyStatus, setPrivacyStatus] = useState("PRIVATE");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +30,15 @@ export default function TransferButton(props: {endpoint: string, accessToken: st
     }
   }, [result])
 
+  useEffect(() => {
+    props.privacy ? setPrivacyStatus("PUBLIC") : setPrivacyStatus("PRIVATE")
+  }, [props.privacy])
+
   const handleClick = async () => {
     getYouTubeToken()
       .then(result => {
         setLoading(true)
-        return sendTracks(props.playlistName, trackArray)
+        return sendTracks(props.playlistName, trackArray, privacyStatus)
       })
       .then(response => {
         if ('status' in response) {

@@ -16,7 +16,7 @@ def sync_playlist():
         ytmusic = YTMusic('oauth.json')
         json_data = request.get_json()
         start1 = time.time()
-        playlistId = ytmusic.create_playlist(json_data[1], "")
+        playlistId = ytmusic.create_playlist(json_data[1], "", json_data[2])
         end1 = time.time()
         print("Create playlist")
         print(end1-start1)
