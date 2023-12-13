@@ -21,23 +21,19 @@ def sync_playlist():
         print("Create playlist")
         print(end1-start1)
         queryArray = extractQuery(json_data) # returns an array of search string containing track name/artist
-        print(queryArray)
         searchedSongs = searchSongs(queryArray)
-        print(searchedSongs)
-        start = time.time()
-        ytmusic.add_playlist_items(playlistId, searchedSongs)
-        end = time.time()
-        print("Add to playlist")
-        print(end-start)
+        print("Searched Songs", searchedSongs[0])
+        print("Empty search strings:", searchedSongs[1])
+        ytmusic.add_playlist_items(playlistId, searchedSongs[0])
 
-        return jsonify({"status": "success", "message": "JSON processed successfully"})
+        return jsonify({"status": "success", "message": "JSON processed successfully", "songs": searchedSongs[1]})
     except Exception as e:
         # Handle exceptions if any
         return jsonify({e})
 
 def extractQuery(json_data_input):
     queryArray = []
-    start = time.time()
+    # start = time.time()
     for track in json_data_input[0]:
         track_name = track['track']['name']
         artists = track['track']['artists']
@@ -45,22 +41,24 @@ def extractQuery(json_data_input):
             artist_name = artist['name']
             track_name = track_name + " " + artist_name
         queryArray.append(track_name)
-    end = time.time()
-    print("Extract Query")
-    print(end-start)
+    # end = time.time()
+    # print("Extract Query")
+    # print(end-start)
     return queryArray
 
 def searchSongs(queryArray):
     ytmusic = YTMusic('oauth.json')
     videoId_array = []
-    for searchString in queryArray:
-        start = time.time()
+    emptySearch = []
+    for searchString in queryArray: 
         result = ytmusic.search(query=searchString, filter='songs', ignore_spelling=True, limit=1)
+        if not result:
+            result = ytmusic.search(query=searchString, filter='videos', ignore_spelling=True, limit=1)
+            if not result:
+                emptySearch.append(searchString)
+                continue
         videoId_array.append(result[0]['videoId'])
-        end = time.time()
-        print("Search Songs")
-        print(end-start)
-    return videoId_array
+    return videoId_array, emptySearch
 
 @app.route("/get-token", methods=['GET'])
 def send_token():

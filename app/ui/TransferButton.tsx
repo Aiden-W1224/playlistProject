@@ -3,12 +3,17 @@ import { fetchTracks } from "../lib/spotify/fetchPlaylists";
 import { getYouTubeToken } from "../lib/ytmusic/auth";
 import { sendTracks } from "../lib/ytmusic/sendTracks";
 import Spinner from "./Spinner";
+import { NotAddedTracksPopup } from "./playlists";
+
 
 export default function TransferButton(props: {endpoint: string, accessToken: string, selectedPlaylist: any, playlistName: string, privacy: boolean}) {
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [privacyStatus, setPrivacyStatus] = useState("PRIVATE");
+  const [doneLoading, setDoneLoading] = useState<boolean>(false);
+  const [response, setResponse] = useState<any>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +48,9 @@ export default function TransferButton(props: {endpoint: string, accessToken: st
       .then(response => {
         if ('status' in response) {
           setLoading(false)
+          if(response.songs.length !== 0) {
+            setDoneLoading(true)
+          }
         }
       })
       .catch(error => {
@@ -54,6 +62,7 @@ export default function TransferButton(props: {endpoint: string, accessToken: st
       <div className='flex w-full items-center'>
         <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-2 rounded focus:ring transform transition duration-300 ease-in-out' onClick={handleClick}>Transfer</button>
         {loading ? <Spinner /> : null}
+        {doneLoading ? <NotAddedTracksPopup response={response.songs}/> : null}
       </div>
       
     )
