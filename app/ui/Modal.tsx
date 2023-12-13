@@ -13,6 +13,10 @@ export default function Modal(props : {openModal : boolean, closeModal : any,
         {props.openModal ? ref.current?.showModal() : ref.current?.close()}
     }, [props.openModal])
 
+    useEffect(() => {
+        setPlaylistName(props.selectedPlaylist.name)
+    }, [props.selectedPlaylist.name])
+
     return (
         <dialog ref={ref} onCancel={props.closeModal}>
             <div className="flex flex-col gap-y-6 p-8">
