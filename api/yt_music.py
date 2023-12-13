@@ -15,16 +15,11 @@ def sync_playlist():
     try:
         ytmusic = YTMusic('oauth.json')
         json_data = request.get_json()
-        start1 = time.time()
         playlistId = ytmusic.create_playlist(json_data[1], "", json_data[2])
-        end1 = time.time()
         print("Create playlist")
-        print(end1-start1)
         queryArray = extractQuery(json_data) # returns an array of search string containing track name/artist
         searchedSongs = searchSongs(queryArray)
-        print("Searched Songs", searchedSongs[0])
-        print("Empty search strings:", searchedSongs[1])
-        ytmusic.add_playlist_items(playlistId, searchedSongs[0])
+        ytmusic.add_playlist_items(playlistId, searchedSongs[0], duplicates=True)
 
         return jsonify({"status": "success", "message": "JSON processed successfully", "songs": searchedSongs[1]})
     except Exception as e:
@@ -33,7 +28,6 @@ def sync_playlist():
 
 def extractQuery(json_data_input):
     queryArray = []
-    # start = time.time()
     for track in json_data_input[0]:
         track_name = track['track']['name']
         artists = track['track']['artists']
@@ -41,9 +35,6 @@ def extractQuery(json_data_input):
             artist_name = artist['name']
             track_name = track_name + " " + artist_name
         queryArray.append(track_name)
-    # end = time.time()
-    # print("Extract Query")
-    # print(end-start)
     return queryArray
 
 def searchSongs(queryArray):
