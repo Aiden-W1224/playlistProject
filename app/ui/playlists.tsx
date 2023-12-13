@@ -138,6 +138,8 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
   const [result, setResult] = useState<any>(null);
   const [trackArray, setTrackArray] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [doneLoading, setDoneLoading] = useState<boolean>(false);
+  const [response, setResponse] = useState<any>(null);
 
   let playlistName: string = props.selectedPlaylist.name;
 
@@ -168,8 +170,14 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
         return sendTracks(playlistName, trackArray)
       })
       .then(response => {
+        setResponse(response)
         if ('status' in response) {
           setLoading(false)
+          if(response.songs.length !== 0) {
+            setDoneLoading(true)
+          }
+          console.log(response)
+          console.log("here")
         }
       })
       .catch(error => {
@@ -181,6 +189,7 @@ function TransferButton(props: {endpoint: string, accessToken: string, selectedP
     <div className='flex w-full items-center'>
       <button className='bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 mx-7 my-2 rounded focus:ring transform transition duration-300 ease-in-out' onClick={handleClick}>Transfer</button>
       {loading ? <Spinner /> : null}
+      {doneLoading ? <NotAddedTracksPopup response={response.songs}/> : null}
     </div>
     
   )
@@ -208,6 +217,35 @@ function Spinner() {
       <span className="sr-only">Loading...</span>
     </div>
   )
+}
+
+function NotAddedTracksPopup(props: {response: any}) {
+  const [isOpen, setIsOpen] = useState(true);
+
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <>
+      {isOpen && (
+        <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center z-50'>
+          <div className='bg-white p-8 shadow-md rounded-md relative'>
+            <button className='absolute top-2 right-2 text-gray-500 hover:text-gray-700' onClick={handleClose}>
+              Close
+            </button>
+            <h1 className='text-2xl font-bold mb-4'>The following songs could not be added:</h1>
+            {props.response.map((song: string) => (
+                      <p>
+                        {song}
+                      </p>
+                    ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 
