@@ -2,35 +2,58 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+1. Make sure you have Node.js 18.17 or later installed.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Clone the project
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone https://github.com/Aiden-W1224/playlistProject.git
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Install Python if you don't already have it.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+5. cd into the project folder and run the following commands:
+   ```bash
+   py -3 -m venv .venv
+   .venv/Scripts/activate
+   pip install Flask
+   pip install -U flask-cors
+   pip install ytmusicapi
+   ```
+6. cd into the api folder, then do:
+      ```bash
+   ytmusicapi oauth
+   ```
+   and follow the YouTube sign in process that opens up in your browser.
+   
+7. Create a Spotify Developer Account and follow the steps outlined in
+   
+   https://developer.spotify.com/documentation/web-api/concepts/apps
 
-## Learn More
+   to obtain your CLIENT_ID
 
-To learn more about Next.js, take a look at the following resources:
+8. In your root project directory, create a .env file and add in
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   NEXT_PUBLIC_CLIENT_ID = <Your Client Id Here>
+   ```
+9. To run the development server, 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+   and on a seperate cmd instance, cd into the api directory and run
 
-## Deploy on Vercel
+   ```bash
+   flask --app yt_music run
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   to run the Flask server.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+10. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
