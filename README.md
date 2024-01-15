@@ -14,6 +14,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 5. cd into the project folder and run the following commands:
    ```bash
+   npm install
    py -3 -m venv .venv
    .venv\Scripts\activate
    pip install Flask
