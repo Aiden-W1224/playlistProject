@@ -126,7 +126,7 @@ export function Songs(props: {endpoint: string, accessToken: string}) {
                   <div className="flex flex-col ml-3">
                     <p className="font-bold text-gray-600 leading-none mt-1">{item.track.name}</p>
                     {item.track.artists.map((artist: any) => (
-                      <p className="text-sm text-gray-600 leading-none mt-1">
+                      <p key={artist.name} className="text-sm text-gray-600 leading-none mt-1">
                         {artist.name}
                       </p>
                     ))}
@@ -175,7 +175,7 @@ export function NotAddedTracksPopup(props: {response: any}) {
             </button>
             <h1 className='text-2xl font-bold mb-4'>The following songs could not be added:</h1>
             {props.response.map((song: string) => (
-              <p>
+              <p key={song}>
                 {song}
               </p>
             ))}
