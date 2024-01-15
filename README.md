@@ -15,7 +15,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 5. cd into the project folder and run the following commands:
    ```bash
    py -3 -m venv .venv
-   .venv/Scripts/activate
+   .venv\Scripts\activate
    pip install Flask
    pip install -U flask-cors
    pip install ytmusicapi
