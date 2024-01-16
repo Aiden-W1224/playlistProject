@@ -31,14 +31,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
    
    https://developer.spotify.com/documentation/web-api/concepts/apps
 
-   to obtain your CLIENT_ID
+   to obtain your CLIENT_ID.
 
-8. In your root project directory, create a .env file and add in
+   NOTE: When you are at https://developer.spotify.com/dashboard/create, the App Name and App Description fields can be whatever you want. However, the Redirect Uri must be, http://localhost:3000/ and the Web API box must be checked.
+
+9. In your root project directory, create a .env file and add in
 
    ```bash
    NEXT_PUBLIC_CLIENT_ID = <Your Client Id Here>
    ```
-9. To run the development server, 
+10. To run the development server, 
 
    ```bash
    npm run dev
@@ -57,4 +59,4 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
    to run the Flask server.
 
-10. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+11. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
